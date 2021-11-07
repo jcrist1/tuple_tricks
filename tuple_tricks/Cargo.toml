@@ -1,0 +1,11 @@
+[package]
+name = "tuple_tricks"
+version = "0.1.0"
+authors = ["Jan Cristina <jan.cristina@gmail.com>"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+make_tuple_traits = { path= "../make_tuple_traits", version = "0.1.0"}
+
