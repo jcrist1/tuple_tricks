@@ -1,0 +1,6 @@
+[workspace]
+
+members = [
+    "tuple_tricks",
+    "make_tuple_traits",
+]
