@@ -1,8 +1,0 @@
-[user]
-	email = jan.cristina@gmail.com
-	name = Jan Cristina
-[core]
-	excludesfile = /Users/jan/.gitignore
-    editor = nvim
-[init]
-	defaultBranch = main
