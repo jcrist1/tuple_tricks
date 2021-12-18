@@ -1,9 +1,15 @@
 [package]
 name = "make_tuple_traits"
 version = "0.1.0"
-edition = "2021"
+edition = "2018"
+authors = ["Jan Cristina <jan.cristina@gmail.com>"]
+license = "MIT"
+description = "a proc_macro for making a bunch of traits for tuples up to a fixed size"
+homepage = "https://github.com/jcrist1/tuple_tricks/make_tuple_traits"
+repository = "https://github.com/jcrist1/tuple_tricks/make_tuple_traits"
+keywords = ["tuple", "generic", "proc_macro"]
+readme = "README.md"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [lib]
 proc_macro = true
