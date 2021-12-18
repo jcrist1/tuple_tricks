@@ -1,9 +1,44 @@
 use make_tuple_traits::mark_tuples;
+use rand_distr::Distribution;
+use std::env;
 use tuple_tricks::NestTuple;
 use tuple_tricks::PreviousTuple;
 use tuple_tricks::UnnestTuple;
 
 mark_tuples!(AllowedToOptionify);
+
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+struct StructA(usize);
+
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+struct StructB(isize);
+
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+struct StructC(i8);
+
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+struct StructD(u8);
+
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+struct StructE(i16);
+
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+struct StructF(u16);
+
+#[allow(clippy::many_single_char_names)]
+#[allow(clippy::type_complexity)]
+fn manual_option(
+    (a, b, c, d, e, f): (StructA, StructB, StructC, StructD, StructE, StructF),
+) -> (
+    Option<StructA>,
+    Option<StructB>,
+    Option<StructC>,
+    Option<StructD>,
+    Option<StructE>,
+    Option<StructF>,
+) {
+    (Some(a), Some(b), Some(c), Some(d), Some(e), Some(f))
+}
 
 trait TupleToTupleOfOptions {
     type TupleOfOptionsType;
@@ -43,17 +78,37 @@ where
     }
 }
 
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
-struct SomeStruct;
+#[allow(clippy::many_single_char_names)]
 fn main() {
-    let tuple = (55i32, String::from("hello"), SomeStruct);
-    let cloned_tuple = tuple.clone();
-    let some_tuple = tuple.tuple_of_some();
-    assert_eq!(
-        some_tuple,
-        (Some(55), Some(String::from("hello")), Some(SomeStruct))
-    );
+    let args: Vec<String> = env::args().collect();
+    let mut rng = rand::thread_rng();
+    let dist = rand_distr::Uniform::new(0, 128);
+    let start = std::time::Instant::now();
+    for _ in 0..10000 {
+        let a = StructA(dist.sample(&mut rng) as usize);
+        let b = StructB(dist.sample(&mut rng) as isize);
+        let c = StructC(dist.sample(&mut rng) as i8);
+        let d = StructD(dist.sample(&mut rng) as u8);
+        let e = StructE(dist.sample(&mut rng) as i16);
+        let f = StructF(dist.sample(&mut rng) as u16);
+        let opt = (Some(a), Some(b), Some(c), Some(d), Some(e), Some(f));
+        let orig = (a, b, c, d, e, f);
 
-    assert_eq!(cloned_tuple.tuple_of_none(), (None, None, None));
-    println!("All checks passed!");
+        let method = args
+            .get(1)
+            .expect("Must call with one argument.  Either \"trait\" or \"manual\"");
+        if method == "trait" {
+            assert_eq!(orig.tuple_of_some(), opt);
+        } else if method == "manual" {
+            assert_eq!(manual_option(orig), opt);
+        } else {
+            panic!(
+                "Unexpected argument received. Use either \"trait\" or \"manual\".  Received: {}",
+                method
+            )
+        }
+    }
+    let end = std::time::Instant::now();
+    let dt = end - start;
+    println!("Test took {:?} units of time", dt);
 }

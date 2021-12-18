@@ -48,9 +48,13 @@ where
 An example for tuples to tuples of options is provided in `tuple_tricks/examples`.
 
 # Example
-There is one example of mapping a tuple to a tuple of `Option`. Run with
+There is one example of mapping a tuple to a tuple of `Option`. It maps a random
+6-tuple of assorted integer/unsized types to `Some`s, using either the inductive
+trait implemantation (call with `trait`) or with a manual implementation for 
+this specific 6 tuple in this example (call with `manual`). It does this for a 
+randomly generate tuple 1000 times
 ```sh
-cargo run --example tuple_induction
+cargo run --example tuple_induction {ARGUMENT}
 ```
 
 

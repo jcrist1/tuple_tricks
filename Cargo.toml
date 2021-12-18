@@ -17,3 +17,5 @@ members = [
 [dev-dependencies]
 make_tuple_traits = { path = "make_tuple_traits" }
 tuple_tricks = { path = "tuple_tricks"}
+rand = "0.8"
+rand_distr = "0.4"
