@@ -1,6 +1,8 @@
 [package]
 name = "tuple_tricks"
 version = "0.1.0"
+description = "A couple of traits on tuples that allow inductively building new traits"
+license = "MIT"
 authors = ["Jan Cristina <jan.cristina@gmail.com>"]
 edition = "2018"
 
