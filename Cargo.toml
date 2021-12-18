@@ -1,6 +1,19 @@
-[workspace]
+[package]
+name = "tuple_tricks_workspace"
+version = "0.1.0"
+authors = ["Jan Crisitna <jan.cristina@gmail.com>"]
+edition = "2018"
+license = "MIT"
+description = "Top-level repo for 'tuple_tricks'"
+homepage = "https://github.com/jcrist1/tuple_tricks/"
+repository = "https://github.com/jcrist1/tuple_tricks/"
 
+[workspace]
 members = [
     "tuple_tricks",
     "make_tuple_traits",
 ]
+
+[dev-dependencies]
+make_tuple_traits = { path = "make_tuple_traits" }
+tuple_tricks = { path = "tuple_tricks"}

@@ -47,6 +47,12 @@ where
 ```
 An example for tuples to tuples of options is provided in `tuple_tricks/examples`.
 
+# Example
+There is one example of mapping a tuple to a tuple of `Option`. Run with
+```sh
+cargo run --example tuple_induction
+```
+
 
 # Ideas for next steps
 It would be nice to get non-consuming methods, so we can keep our old tuples around. I'm open to 
