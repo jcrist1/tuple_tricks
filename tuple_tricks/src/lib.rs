@@ -1,4 +1,3 @@
-extern crate make_tuple_traits;
 use make_tuple_traits::{make_prev_tuple_types, make_unnest_traits};
 
 pub trait PreviousTuple {
