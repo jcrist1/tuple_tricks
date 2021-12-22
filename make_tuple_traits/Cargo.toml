@@ -1,6 +1,6 @@
 [package]
 name = "make_tuple_traits"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2018"
 authors = ["Jan Cristina <jan.cristina@gmail.com>"]
 license = "MIT"

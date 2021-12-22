@@ -17,7 +17,7 @@ impl<{upper_tuple_types}> PreviousTuple for ({upper_tuple_types}) {{
 
     type Head = {head_upper};
 
-    fn pop(self) -> (Self::TailTuple, Self::Head) {{
+    fn decons(self) -> (Self::TailTuple, Self::Head) {{
         let ({lower_tuple}) = self;
         (({lower_tail_tuple},), {lower_head})
     }}
