@@ -1,12 +1,12 @@
 [package]
 name = "make_tuple_traits"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2018"
 authors = ["Jan Cristina <jan.cristina@gmail.com>"]
 license = "MIT"
 description = "a proc_macro for making a bunch of traits for tuples up to a fixed size"
-homepage = "https://github.com/jcrist1/tuple_tricks/make_tuple_traits"
-repository = "https://github.com/jcrist1/tuple_tricks/make_tuple_traits"
+homepage = "https://github.com/jcrist1/tuple_tricks/"
+repository = "https://github.com/jcrist1/tuple_tricks/"
 keywords = ["tuple", "generic", "proc_macro"]
 readme = "README.md"
 

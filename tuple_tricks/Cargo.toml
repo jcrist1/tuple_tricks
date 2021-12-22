@@ -5,8 +5,8 @@ description = "A couple of traits on tuples that allow inductively building new 
 license = "MIT"
 authors = ["Jan Cristina <jan.cristina@gmail.com>"]
 edition = "2018"
-homepage = "https://github.com/jcrist1/tuple_tricks/tuple_tricks"
-repository = "https://github.com/jcrist1/tuple_tricks/tuple_tricks"
+homepage = "https://github.com/jcrist1/tuple_tricks/"
+repository = "https://github.com/jcrist1/tuple_tricks/"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
