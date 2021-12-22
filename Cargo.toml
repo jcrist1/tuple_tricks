@@ -12,10 +12,11 @@ repository = "https://github.com/jcrist1/tuple_tricks/"
 members = [
     "tuple_tricks",
     "make_tuple_traits",
+    "mark_tuple_traits",
 ]
 
 [dev-dependencies]
-make_tuple_traits = { path = "make_tuple_traits" }
 tuple_tricks = { path = "tuple_tricks"}
+mark_tuple_traits = { path = "mark_tuple_traits" }
 rand = "0.8"
 rand_distr = "0.4"

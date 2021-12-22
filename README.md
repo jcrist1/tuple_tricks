@@ -9,6 +9,7 @@ perform tuple tricks you have to mark all of the tuples (up to 32 elements long)
 `proc_macro`: `mark_tuples!(YourMarker)`.
 
 # Building an inductive trait on all tuples.
+(This is duplicated in the `tuple_tricks` crate).
 First you will need to provide all tuples with a marker. This is done with 
 ```rust
 mark_tuples!(MyMarker)
@@ -52,12 +53,23 @@ There is one example of mapping a tuple to a tuple of `Option`. It maps a random
 6-tuple of assorted integer/unsized types to `Some`s, using either the inductive
 trait implemantation (call with `trait`) or with a manual implementation for 
 this specific 6 tuple in this example (call with `manual`). It does this for a 
-randomly generate tuple 1000 times
+randomly generate tuple 100000 times
 ```sh
 cargo run --example tuple_induction {ARGUMENT}
 ```
+The trait based map is not entirely zero cost. As it appears to take about 4% more time.
 
+There is another example which adds `std::ops::Add` to (wrapped) tuples, so one
+can concatenate tuples with `+`:
+```sh
+cargo run --example tuple_addition
+```
 
+# Similar ideas
+I haven't done a very thorough investigation but [frunk](https://github.com/lloydmeta/frunk) 
+seems to do some similar stuff.
+I couldn't quickly see how I could do some stuff in frunk that I can do here (like
+`tuple_addition` example). But that's probably on me. In any case it seems cool.
 # Ideas for next steps
 It would be nice to get non-consuming methods, so we can keep our old tuples around. I'm open to 
 other ideas as issue requests.

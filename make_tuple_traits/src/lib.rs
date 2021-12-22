@@ -30,22 +30,6 @@ impl<{upper_tuple_types}> PreviousTuple for ({upper_tuple_types}) {{
         lower_tail_tuple = tuple_type_list("a", n - 1)
     )
 }
-fn make_next_tuple_type(n: i8) -> String {
-    format!(
-        "
-impl<{upper_tuple_types}> NextTuple for ({upper_tuple_types}) {{
-    type NextTuple<A> = ({upper_tuple_types}, A);
-
-    fn next<A>(self, a: A) -> Self::NextTuple<A> {{
-        let ({lower_tuple}) = self;
-        ({lower_tuple}, a)
-    }}
-}}
-",
-        upper_tuple_types = tuple_type_list("A", n),
-        lower_tuple = tuple_type_list("a", n),
-    )
-}
 
 fn make_nested_tuple(letter: &str, n: i8) -> String {
     (2..(n + 1))
@@ -81,15 +65,6 @@ impl<{upper_tuple_types}> {marker} for ({upper_tuple_types},) {{}}
         upper_tuple_types = tuple_type_list("A", n),
         marker = marker
     )
-}
-
-#[proc_macro]
-pub fn make_next_tuple_types(_item: TokenStream) -> TokenStream {
-    let data = (2..33)
-        .map(make_next_tuple_type)
-        .collect::<Vec<_>>()
-        .join("\n\n");
-    data.parse().expect("Couldn't parse the tuple types")
 }
 
 #[proc_macro]

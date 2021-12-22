@@ -1,0 +1,17 @@
+[package]
+name = "mark_tuple_traits"
+version = "0.1.0"
+edition = "2018"
+authors = ["Jan Cristina <jan.cristina@gmail.com>"]
+license = "MIT"
+description = "a proc_macro for marking tuples of length up to 32 with a single marker trait to bypass the 'fundamental' feature"
+homepage = "https://github.com/jcrist1/tuple_tricks/mark_tuple_traits"
+repository = "https://github.com/jcrist1/tuple_tricks/mark_tuple_traits"
+keywords = ["tuple", "generic", "proc_macro"]
+readme = "README.md"
+
+
+[lib]
+proc_macro = true
+
+[dependencies]

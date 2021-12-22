@@ -1,4 +1,4 @@
-use make_tuple_traits::mark_tuples;
+use mark_tuple_traits::mark_tuples;
 use rand_distr::Distribution;
 use std::env;
 use tuple_tricks::NestTuple;
@@ -84,7 +84,7 @@ fn main() {
     let mut rng = rand::thread_rng();
     let dist = rand_distr::Uniform::new(0, 128);
     let start = std::time::Instant::now();
-    for _ in 0..10000 {
+    for _ in 0..100000 {
         let a = StructA(dist.sample(&mut rng) as usize);
         let b = StructB(dist.sample(&mut rng) as isize);
         let c = StructC(dist.sample(&mut rng) as i8);

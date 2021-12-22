@@ -2,7 +2,7 @@ use std::ops::Add;
 
 use tuple_tricks::{NestTuple, PreviousTuple, UnnestTuple};
 
-use make_tuple_traits::mark_tuples;
+use mark_tuple_traits::mark_tuples;
 
 mark_tuples!(TupleAdditionMarker);
 
