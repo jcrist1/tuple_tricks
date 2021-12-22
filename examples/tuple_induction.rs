@@ -68,12 +68,12 @@ where
     type TupleOfOptionsType = <(NestedPrevTupleOption, Option<Head>) as UnnestTuple>::Unnested;
 
     fn tuple_of_some(self) -> Self::TupleOfOptionsType {
-        let (prev, head) = self.pop();
+        let (prev, head) = self.decons();
         (prev.tuple_of_some().nest(), Some(head)).unnest()
     }
 
     fn tuple_of_none(self) -> Self::TupleOfOptionsType {
-        let (prev, _) = self.pop();
+        let (prev, _) = self.decons();
         (prev.tuple_of_none().nest(), None).unnest()
     }
 }

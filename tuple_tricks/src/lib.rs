@@ -4,7 +4,7 @@ use make_tuple_traits::{make_prev_tuple_types, make_unnest_traits};
 pub trait PreviousTuple {
     type TailTuple;
     type Head;
-    fn pop(self) -> (Self::TailTuple, Self::Head);
+    fn decons(self) -> (Self::TailTuple, Self::Head);
 }
 
 pub trait PrevUtil {
@@ -23,11 +23,11 @@ where
     type Tail = <T as PreviousTuple>::TailTuple;
 
     fn head(self) -> Self::Head {
-        let (_, head) = self.pop();
+        let (_, head) = self.decons();
         head
     }
     fn tail(self) -> Self::Tail {
-        let (tail, _) = self.pop();
+        let (tail, _) = self.decons();
         tail
     }
 }
@@ -50,7 +50,7 @@ where
     type Nested = (Self::Tail, Self::Head);
 
     fn nest(self) -> Self::Nested {
-        let (tail, head) = self.pop();
+        let (tail, head) = self.decons();
         (tail.nest(), head)
     }
 }
@@ -75,7 +75,6 @@ impl<A> UnnestTuple for (A,) {
         self
     }
 }
-
 make_prev_tuple_types!();
 
 make_unnest_traits!();
