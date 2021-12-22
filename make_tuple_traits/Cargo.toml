@@ -1,7 +1,7 @@
 [package]
 name = "make_tuple_traits"
 version = "0.2.0"
-edition = "2021"
+edition = "2018"
 authors = ["Jan Cristina <jan.cristina@gmail.com>"]
 license = "MIT"
 description = "a proc_macro for making a bunch of traits for tuples up to a fixed size"

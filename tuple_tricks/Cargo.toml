@@ -4,7 +4,7 @@ version = "0.2.0"
 description = "A couple of traits on tuples that allow inductively building new traits"
 license = "MIT"
 authors = ["Jan Cristina <jan.cristina@gmail.com>"]
-edition = "2021"
+edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

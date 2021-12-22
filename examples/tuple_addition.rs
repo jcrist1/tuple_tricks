@@ -1,5 +1,4 @@
-#![recursion_limit = "128"]
-// use std::ops::Add;
+use std::ops::Add;
 
 use tuple_tricks::{NestTuple, PreviousTuple, UnnestTuple};
 
@@ -7,14 +6,9 @@ use make_tuple_traits::mark_tuples;
 
 mark_tuples!(TupleAdditionMarker);
 
-struct DrainTuple<AccumTuple, RemainingTuple> {
-    accum: AccumTuple,
-    remaining: RemainingTuple,
-}
-
-trait DrainableTuplePair {
+trait DrainableTupleSource<TargetTuple> {
     type Drained;
-    fn drain(self) -> Self::Drained;
+    fn drain(self, target: TargetTuple) -> Self::Drained;
 }
 
 trait Boo {
@@ -30,47 +24,33 @@ where
     }
 }
 
-impl<TupleType, NestedTuple, A, Unnested> DrainableTuplePair for DrainTuple<TupleType, (A,)>
+impl<TupleType, NestedTuple, A, Unnested> DrainableTupleSource<TupleType> for (A,)
 where
-    (A,): Sized,
     TupleType: NestTuple<Nested = NestedTuple>,
     (NestedTuple, A): UnnestTuple<Unnested = Unnested>,
 {
     type Drained = Unnested;
-    fn drain(self) -> Unnested {
-        let DrainTuple {
-            accum,
-            remaining: (a,),
-        } = self;
-        (accum.nest(), a).unnest()
+    fn drain(self, tuple: TupleType) -> Unnested {
+        (tuple.nest(), self.0).unnest()
     }
 }
 
-impl<LeftTuple, TailTuple, B, RightTuple, LeftNested, LeftNestedPlusHeadUnnested> DrainableTuplePair
-    for DrainTuple<LeftTuple, RightTuple>
+impl<LeftTuple, TailTuple, Head, RightTuple, LeftNested, LeftNestedPlusHeadUnnested>
+    DrainableTupleSource<LeftTuple> for RightTuple
 where
     LeftTuple: NestTuple<Nested = LeftNested>,
-    RightTuple: TupleAdditionMarker + PreviousTuple<Head = B, TailTuple = TailTuple>,
-    (LeftNested, B): UnnestTuple<Unnested = LeftNestedPlusHeadUnnested>,
-    DrainTuple<LeftNestedPlusHeadUnnested, TailTuple>: DrainableTuplePair,
+    RightTuple: TupleAdditionMarker + PreviousTuple<Head = Head, TailTuple = TailTuple>,
+    (LeftNested, Head): UnnestTuple<Unnested = LeftNestedPlusHeadUnnested>,
+    TailTuple: DrainableTupleSource<LeftNestedPlusHeadUnnested>,
 {
-    type Drained =
-        <DrainTuple<LeftNestedPlusHeadUnnested, TailTuple> as DrainableTuplePair>::Drained;
+    type Drained = <TailTuple as DrainableTupleSource<LeftNestedPlusHeadUnnested>>::Drained;
 
-    fn drain(self) -> Self::Drained {
-        let DrainTuple {
-            accum: left_tuple,
-            remaining: right_tuple,
-        } = self;
-        let (right_tail, right_head) = right_tuple.decons();
+    fn drain(self, left_tuple: LeftTuple) -> Self::Drained {
+        let (right_tail, right_head) = self.decons();
         let left_nested = left_tuple.nest();
         let accum = (left_nested, right_head).unnest();
 
-        DrainTuple {
-            accum,
-            remaining: right_tail,
-        }
-        .drain()
+        right_tail.drain(accum)
     }
 }
 
@@ -86,23 +66,19 @@ impl<A> ReversableTuple for (A,) {
     }
 }
 
-//impl<TupleType, Head, TailTuple> ReversableTuple for TupleType
-//where
-//    TupleType: TupleAdditionMarker + PreviousTuple<Head = Head, TailTuple = TailTuple>,
-//    DrainTuple<(Head,), TailTuple>: DrainableTuplePair,
-//{
-//    type ReverseTuple = <DrainTuple<(Head,), TailTuple> as DrainableTuplePair>::Drained;
-//
-//    fn reverse(self) -> Self::ReverseTuple {
-//        let (tail, head) = self.decons();
-//        DrainTuple {
-//            accum: (head,),
-//            remaining: tail,
-//        }
-//        .drain()
-//    }
-//}
-//
+impl<TupleType, Head, TailTuple> ReversableTuple for TupleType
+where
+    TupleType: TupleAdditionMarker + PreviousTuple<Head = Head, TailTuple = TailTuple>,
+    TailTuple: DrainableTupleSource<(Head,)>,
+{
+    type ReverseTuple = <TailTuple as DrainableTupleSource<(Head,)>>::Drained;
+
+    fn reverse(self) -> Self::ReverseTuple {
+        let (tail, head) = self.decons();
+        tail.drain((head,))
+    }
+}
+
 trait WrapT {
     type Wrapped;
     fn t(self) -> Self::Wrapped;
@@ -115,21 +91,17 @@ impl<TupleType: TupleAdditionMarker> WrapT for TupleType {
     }
 }
 
-//impl<LeftTuple, RightTuple, ReversedRight, DrainedResult> Add<T<RightTuple>> for T<LeftTuple>
-//where
-//    RightTuple: ReversableTuple<ReverseTuple = ReversedRight>,
-//    DrainTuple<LeftTuple, ReversedRight>: DrainableTuplePair<Drained = DrainedResult>,
-//{
-//    type Output = T<DrainedResult>;
-//    fn add(self, T(right_tuple): T<RightTuple>) -> T<DrainedResult> {
-//        let T(left_tuple) = self;
-//        T(DrainTuple {
-//            accum: left_tuple,
-//            remaining: right_tuple.reverse(),
-//        }
-//        .drain())
-//    }
-//}
+impl<LeftTuple, RightTuple, ReversedRight> Add<T<RightTuple>> for T<LeftTuple>
+where
+    RightTuple: ReversableTuple<ReverseTuple = ReversedRight>,
+    ReversedRight: DrainableTupleSource<LeftTuple>,
+{
+    type Output = T<<ReversedRight as DrainableTupleSource<LeftTuple>>::Drained>;
+    fn add(self, T(right_tuple): T<RightTuple>) -> Self::Output {
+        let T(left_tuple) = self;
+        T(right_tuple.reverse().drain(left_tuple))
+    }
+}
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
 struct T<TupleType>(TupleType);
@@ -149,21 +121,10 @@ fn main() {
     let bigg = 1u64;
     let biggg = 1u128;
 
-    //let left_tuple = (smol, small, mid).t() + (big, bigg, biggg).t();
-    let right_tuple = (smol, small, mid, big, bigg, biggg).t();
-    let (tail, head) = right_tuple.0.decons();
-    let (tail_tail, tail_head) = tail.decons();
-    let (tail_tail_tail, tail_tail_head) = tail_tail.decons();
-    let tmp = (head, tail_head);
-    tmp.boo();
+    let left_tuple = (smol, small, mid).t() + (big, bigg, biggg).t();
+    let right_tuple = (smol, small, mid, big, bigg, biggg);
 
-    let right = DrainTuple {
-        accum: (tail_tail_tail),
-        remaining: (head, tail_head, tail_tail_head),
-    };
-    (head,).nest();
-    right.drain();
+    println!("REVERSED {:?}", right_tuple.reverse());
 
-    //println!("LEFT TUPLE {:?}", right);
-    //assert_eq!(left_tuple, right_tuple);
+    assert_eq!(left_tuple.unwrap(), right_tuple);
 }
