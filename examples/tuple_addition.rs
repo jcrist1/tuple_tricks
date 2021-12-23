@@ -11,19 +11,6 @@ trait DrainableTupleSource<TargetTuple> {
     fn drain(self, target: TargetTuple) -> Self::Drained;
 }
 
-trait Boo {
-    fn boo(self) -> bool;
-}
-
-impl<T> Boo for T
-where
-    T: TupleAdditionMarker,
-{
-    fn boo(self) -> bool {
-        true
-    }
-}
-
 impl<TupleType, NestedTuple, A, Unnested> DrainableTupleSource<TupleType> for (A,)
 where
     TupleType: NestTuple<Nested = NestedTuple>,
